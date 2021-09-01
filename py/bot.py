@@ -31,6 +31,16 @@ class FresherBot(discord.Client):
 
 
 def main():
+    # Verify user variables have been filled
+    # Yes, there is a better way to do this
+    # No, that does not mean I'm not going to be lazy
+    if not UserVars.DISCORD_API:
+        print("error: py/user_vars.py: DISCORD_API not filled in, fill in with your Discord bot's API key")
+        exit()
+    if not UserVars.DISCORD_USER:
+        print("error: py/user_vars.py: DISCORD_USER not filled in, please fill in with your user name")
+        exit()
+        
     serialCon = serial.Serial('/dev/ttyACM0', 9600, timeout=1)
     # Wait for serial to initialise
     sleep(3)
