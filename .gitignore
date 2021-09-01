@@ -1,2 +1,5 @@
 TAGS
 old/*
+__pycache__
+# This contains API Keys, maybe other sensitive info
+user_vars.py
