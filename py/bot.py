@@ -8,6 +8,8 @@ from user_vars import UserVars
 
 # Definitions
 DATA_DIR_PATH = "./data"
+ARDUINO_SERIAL_PORT = "/dev/ttyACM0"
+ARDUINO_SERIAL_SPEED = 9600
 
 class FresherBot(discord.Client):
     def initialise(self, dataPath, serialCon):
@@ -40,10 +42,14 @@ def main():
     if not UserVars.DISCORD_USER:
         print("error: py/user_vars.py: DISCORD_USER not filled in, please fill in with your user name")
         exit()
-        
-    serialCon = serial.Serial('/dev/ttyACM0', 9600, timeout=1)
-    # Wait for serial to initialise
-    sleep(3)
+
+    try:
+        serialCon = serial.Serial(ARDUINO_SERIAL_PORT, ARDUINO_SERIAL_SPEED, timeout=1)
+        # Wait for serial to initialise
+        sleep(3)
+    except serial.serialutil.SerialException as se:
+        print('error: could not connect to serial: %s' % se)
+        quit(1)
 
     path = "%s/%s" % (DATA_DIR_PATH, str(datetime.date.today()))
     if not os.path.isdir(path):
