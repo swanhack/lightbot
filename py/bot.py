@@ -15,6 +15,13 @@ class FresherBot(discord.Client):
     def initialise(self, dataPath, serialCon):
         self.dataPath = dataPath
         self.serialCon = serialCon
+
+    def __init__(self, dataPath, serialCon):
+        self.dataPath = dataPath
+        self.serialCon = serialCon
+        # run the constructor of our parent (discord.Client)
+        super(FresherBot, self).__init__()
+
         
     async def on_ready(self):
         print("%s IS ALIVE" % self.user)
@@ -55,8 +62,7 @@ def main():
     if not os.path.isdir(path):
         os.makedirs(path)
 
-    discordBot = FresherBot()
-    discordBot.initialise(path, serialCon)
+    discordBot = FresherBot(path, serialCon)
     discordBot.run(UserVars.DISCORD_API)
 
     
