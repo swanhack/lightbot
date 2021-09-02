@@ -13,11 +13,19 @@ ARDUINO_SERIAL_SPEED = 9600
 
 class FresherBot(discord.Client):
     def __init__(self, dataPath, fresherUno):
-        self.dataPath = dataPath
         self.fresherUno = fresherUno
+        memberPath = dataPath + '/joinedMembers.txt'
+        self.joinedMemberSet = set()
+        with open(memberPath, 'r') as joinedMembersFile:
+            for joinedMember in joinedMembersFile.read().split('\n'):
+                self.joinedMemberSet.add(joinedMember)
+        print(self.joinedMemberSet)
+        self.joinedMemberFile = open(memberPath, 'a')
         # run the constructor of our parent (discord.Client)
         super(FresherBot, self).__init__()
 
+    def __del__(self):
+        self.joinedMemberFile.close()
         
     async def on_ready(self):
         print("%s IS ALIVE" % self.user)
@@ -25,9 +33,20 @@ class FresherBot(discord.Client):
     async def on_message(self, message):
         if message.author.name == UserVars.DISCORD_USER:
             if message.content == 'newuser':
+                self.__addJoinedMember('newuser')
                 self.fresherUno.discordBlink(len('newuser'))
 
-#    async def on_member_join(self, member):
+    async def on_member_join(self, member):
+        print('member %s joined' % member.display_name)
+        self.__addJoinedMember(member.display_name)
+        self.fresherUno.discordBlink(len(member.display_name))
+
+    def __addJoinedMember(self, memberName):
+        if memberName not in self.joinedMemberSet:
+            print('FresherBot: added ' + memberName)
+            self.joinedMemberSet.add(memberName)
+            self.joinedMemberFile.write(memberName + '\n')
+            self.joinedMemberFile.flush()
 
 class FresherUno:
     def __init__(self, serPort, serSpeed):
