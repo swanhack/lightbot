@@ -6,7 +6,7 @@
 */
 
 // Signals we expect to receive through serial
-#define SSIG_DISCORD_JOIN 'Q'
+#define SSIG_DISCORD_JOIN 1
 
 // RGB strip pins
 #define RGB_R 11
@@ -68,20 +68,17 @@ void led_fadeto(const struct strip_state *state) {
 }
 
 // Pulse the strip with the discord colour N times
-inline int led_discord_pulse(int n) {
+inline int led_discord_pulse(int n,  const struct strip_state *accent_state) {
         const struct strip_state old_state = {active_state.rval, active_state.gval, active_state.bval};
         const struct strip_state discord_purple = {0, 179, 36};
-        const struct strip_state discord_accent = {102, 0, 255};
         // Threshold to 16 or less
         int n_cap = n & 15;
 
-        char str[50];
         for (int i = 0; i < n_cap; i++) {
                 led_fadeto(&discord_purple);
                 delay(250);
-                led_fadeto(&discord_accent);
-                sprintf(str, "%d, %d, %d\n\r", active_state.rval, active_state.gval, active_state.bval);
-                Serial.print(str);
+                led_fadeto(accent_state);
+                delay(250);
         }
         led_fadeto(&old_state);
         return 0;
@@ -90,16 +87,13 @@ inline int led_discord_pulse(int n) {
 
 // Act on whatever we have in the serial buffer
 int perform_user_operation() {
-        char op = Serial.read();
-        char str[50];
-        sprintf(str, "read %c\n\r", op);
-        Serial.print(str);
-        switch (op) {
+        uint8_t command[8];
+        Serial.readBytes(&command[0], 8);
+        char operation = command[0];
+        switch (operation) {
         case SSIG_DISCORD_JOIN:
-                delay(500);
-                int char_n = Serial.parseInt();
-                Serial.print(str);
-                led_discord_pulse(char_n);
+                const struct strip_state accent = {command[1], command[2], command[3]};
+                led_discord_pulse(command[4], &accent);
                 break;
         }
 
