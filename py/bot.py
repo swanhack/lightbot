@@ -32,16 +32,11 @@ class FresherBot(discord.Client):
 
         self.joinedMemberFile = open(memberPath, 'a')
 
-        # Profile picture storage
-        self.joinedMemberImgs = dataPath + '/img'
-        if not os.path.isdir(self.joinedMemberImgs):
-            os.mkdir(self.joinedMemberImgs)
-        
         # run the constructor of our parent (discord.Client)
         super(FresherBot, self).__init__()
 
-#    def __del__(self):
-        #self.joinedMemberFile.close()
+    def __del__(self):
+        self.joinedMemberFile.close()
         
     async def on_ready(self):
         print("%s IS ALIVE" % self.user)
@@ -50,17 +45,17 @@ class FresherBot(discord.Client):
         self.lock.acquire()
         if message.author.name == UserVars.DISCORD_USER:
             accentColour = self.__getMostCommonPixel(message.author)
-            
             if message.content == 'newuser':
-                self.__addJoinedMember('newuser')
                 self.fresherUno.discordBlink(len('newuser'), accentColour)
         self.lock.release()
     
     async def on_member_join(self, member):
         self.lock.acquire()
         print('member %s joined' % member.display_name)
-        self.__addJoinedMember(member.display_name)
-#        self.fresherUno.discordBlink(len(member.display_name))
+        # Don't blink if we have collision on the member name
+        if self.__addJoinedMember(member.display_name):
+            accentColour = self.__getMostCommonPixel(message.author)
+            self.fresherUno.discordBlink(len(member.display_name))
         self.lock.release()
 
     def __getMostCommonPixel(self, member):
