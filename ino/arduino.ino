@@ -70,7 +70,7 @@ void led_fadeto(const struct strip_state *state) {
 // Pulse the strip with the discord colour N times
 inline int led_discord_pulse(int n,  const struct strip_state *accent_state) {
         const struct strip_state old_state = {active_state.rval, active_state.gval, active_state.bval};
-        const struct strip_state discord_purple = {0, 179, 36};
+        const struct strip_state discord_purple =  {102, 0, 255};
         // Threshold to 16 or less
         int n_cap = n & 15;
 
