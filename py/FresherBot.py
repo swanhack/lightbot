@@ -22,15 +22,19 @@ class FresherBot(discord.Client):
                         print("warn: joinedMembers.txt not found")
 
                 self.joinedMemberFile = open(memberPath, 'a')
-                # run the constructor of our parent (discord.Client)
-                super(FresherBot, self).__init__()
+                
+                # run the constructor of our parent (discord.Client) with right permissions
+                memberIntent = discord.Intents.default()
+                memberIntent.members = True
+                super(FresherBot, self).__init__(intents=memberIntent)
                         
         def __del__(self):
                 self.joinedMemberFile.close()
-                                
+
+                        
         async def on_ready(self):
                 print("%s IS ALIVE" % self.user)
- 
+
         async def on_message(self, message):
                 self.lock.acquire()
                 if message.author.name == UserVars.DISCORD_USER:
