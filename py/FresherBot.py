@@ -38,7 +38,7 @@ class FresherBot(discord.Client):
         async def on_message(self, message):
                 self.lock.acquire()
                 if message.author.name == UserVars.DISCORD_USER:
-                        accentColour = self.__getMostCommonPixel(message.author)
+                        accentColour = self.__getAccentColour(message.author)
                         if message.content == 'newuser':
                                 self.fresherUno.discordBlink(len('newuser'), accentColour)
                 self.lock.release()
@@ -48,21 +48,26 @@ class FresherBot(discord.Client):
                 print('member %s joined' % member.display_name)
                 # Don't blink if we have collision on the member name
                 if self.__addJoinedMember(member.display_name):
-                        accentColour = self.__getMostCommonPixel(message.author)
+                        accentColour = self.__getAccentColour(message.author)
                         self.fresherUno.discordBlink(len(member.display_name))
                 self.lock.release()
 
-        def __getMostCommonPixel(self, member):
+        # Currently just retrieves the pixel at 4,4
+        def __getAccentColour(self, member):
                 req = requests.get(member.avatar_url, stream = True)
                 if req.status_code == 200:
                         req.raw.decode_content = True
                         with Image.open(req.raw) as avatarImg:
                                 avatarPx = avatarImg.load()
-                        return avatarPx[4, 4]
+                        accentColour = avatarPx[4, 4]
                 else:
                         print('error: FresherBot: failed to download image for user %s at %s' %
                               (member.name, imageURL))
-                        return (0, 0, 0)
+                        accentcolour = (0, 0, 0)
+
+                if not isinstance(accentColour, tuple):
+                        accentColour = (0, 0, 0)
+                return accentColour
             
         def __addJoinedMember(self, member):
                 memberUniqueName = "%s#%s" % (member.name, member.discriminator)
