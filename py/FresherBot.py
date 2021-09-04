@@ -64,9 +64,12 @@ class FresherBot(discord.Client):
                               (member.name, imageURL))
                         return (0, 0, 0)
             
-        def __addJoinedMember(self, memberName):
-                if memberName not in self.joinedMemberSet:
-                        print('FresherBot: added ' + memberName)
-                        self.joinedMemberSet.add(memberName)
-                        self.joinedMemberFile.write(memberName + '\n')
+        def __addJoinedMember(self, member):
+                memberUniqueName = "%s#%s" % (member.name, member.discriminator)
+                if memberUniqueName not in self.joinedMemberSet:
+                        print('FresherBot: added ' + memberUniqueName)
+                        self.joinedMemberSet.add(memberUniqueName)
+                        self.joinedMemberFile.write(memberUniqueName + '\n')
                         self.joinedMemberFile.flush()
+                        return True
+                return False
