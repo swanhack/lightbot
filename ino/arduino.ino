@@ -76,9 +76,9 @@ inline int led_discord_pulse(int n,  const struct strip_state *accent_state) {
 
         for (int i = 0; i < n_cap; i++) {
                 led_fadeto(&discord_purple);
-                delay(250);
+                delay(200);
                 led_fadeto(accent_state);
-                delay(250);
+                delay(200);
         }
         led_fadeto(&old_state);
         return 0;
