@@ -6,6 +6,9 @@ import discord
 import matplotlib.colors as mcolours
 from user_vars import UserVars
 
+CUSTOM_COLOUR_DICT = {"swan_hack": (0x00, 0xFF, 0x02),
+                      "pink"     : (0xFF, 0x22, 0xCB)}
+
 class FresherBot(discord.Client):
         def __init__(self, dataPath, fresherUno):
                 self.fresherUno = fresherUno
@@ -36,17 +39,8 @@ class FresherBot(discord.Client):
 
         async def on_message(self, message):
                 if message.author.name == UserVars.DISCORD_USER:
-                        msgContentList = message.content.split(' ')
-                        if msgContentList[0] == 'newuser':
-                                accentColour = self.__getAccentColour(message.author)
-                                self.fresherUno.discordBlink(len('newuser'), accentColour)
-                        elif msgContentList[0] == 'colour':
-                                colourPercent = mcolours.to_rgb(msgContentList[1])
-                                colourRGB = (int(colourPercent[0] * 255),
-                                             int(colourPercent[1] * 255),
-                                             int(colourPercent[2] * 255))
-                                self.fresherUno.setDefaultColour(colourRGB)
-                                
+                        await self.__handlePrivilegedMessage(message)
+        
     
         async def on_member_join(self, member):
                 print('member %s joined' % member.display_name)
@@ -55,6 +49,28 @@ class FresherBot(discord.Client):
                         accentColour = self.__getAccentColour(message.author)
                         self.fresherUno.discordBlink(len(member.display_name))
 
+        async def __handlePrivilegedMessage(self, message):
+                msgContentList = message.content.split(' ')
+                if msgContentList[0] == 'newuser':
+                        accentColour = self.__getAccentColour(message.author)
+                        self.fresherUno.discordBlink(len('newuser'), accentColour)
+                elif msgContentList[0] == 'colour':
+                        try:
+                                newDefaultColour = self.__translateColour(msgContentList[1])
+                                self.fresherUno.setDefaultColour(newDefaultColour)
+                        except ValueError as ve:
+                                await message.author.send("Sorry, I don't know what colour that is.")
+
+        def __translateColour(self, colourStr):
+                if colourStr in CUSTOM_COLOUR_DICT.keys():
+                        return CUSTOM_COLOUR_DICT[colourStr]
+
+                colourPercent = mcolours.to_rgb(colourStr)
+                return (int(colourPercent[0] * 255),
+                        int(colourPercent[1] * 255),
+                        int(colourPercent[2] * 255))
+                        
+                        
         # Currently just retrieves the pixel at 4,4
         def __getAccentColour(self, member):
                 req = requests.get(member.avatar_url, stream = True)
