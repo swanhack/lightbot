@@ -7,6 +7,7 @@
 
 // Signals we expect to receive through serial
 #define SSIG_DISCORD_JOIN 1
+#define SSIG_SET_DEFAULT_COLOUR 2
 
 // RGB strip pins
 #define RGB_R 11
@@ -87,13 +88,26 @@ inline int led_discord_pulse(int n,  const struct strip_state *accent_state) {
 
 // Act on whatever we have in the serial buffer
 int perform_user_operation() {
-        uint8_t command[8];
-        Serial.readBytes(&command[0], 8);
-        char operation = command[0];
+        uint8_t operation;
+        // Read single byte (operation spec)
+        Serial.readBytes(&operation, 1);
+        uint8_t operands[8];
         switch (operation) {
         case SSIG_DISCORD_JOIN:
-                const struct strip_state accent = {command[1], command[2], command[3]};
-                led_discord_pulse(command[4], &accent);
+                {
+                        // Read 4 bytes (R, G, B, count)
+                        Serial.readBytes(&operands[0], 4);
+                        const struct strip_state accent = {operands[0], operands[1], operands[2]};
+                        led_discord_pulse(operands[3], &accent);
+                }
+                break;
+        case SSIG_SET_DEFAULT_COLOUR:
+                {
+                        // Read 3 bytes (R, G, B)
+                        Serial.readBytes(&operands[0], 3);
+                        const struct strip_state default_colour = {operands[0], operands[1], operands[2]};
+                        led_fadeto(&default_colour);
+                }
                 break;
         }
 
@@ -111,5 +125,4 @@ void loop() {
         if (Serial.available()) {
                 perform_user_operation();
         }
-        
 }
