@@ -1,0 +1,7 @@
+* Functions
+  - When a new user joins a server where the bot also resides:
+    - Pulse between Discord purple and new user's profile picture colour at pixel 4,4
+    - Record the new user in data/<DATE>/joinedMembers.txt
+  - Pretty much it lmao
+
+    
