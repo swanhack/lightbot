@@ -8,7 +8,6 @@ from user_vars import UserVars
 
 class FresherBot(discord.Client):
         def __init__(self, dataPath, fresherUno):
-                self.lock = threading.Lock()
                 self.fresherUno = fresherUno
 
                 # New member storage
@@ -36,21 +35,17 @@ class FresherBot(discord.Client):
                 print("%s IS ALIVE" % self.user)
 
         async def on_message(self, message):
-                self.lock.acquire()
                 if message.author.name == UserVars.DISCORD_USER:
                         accentColour = self.__getAccentColour(message.author)
                         if message.content == 'newuser':
                                 self.fresherUno.discordBlink(len('newuser'), accentColour)
-                self.lock.release()
     
         async def on_member_join(self, member):
-                self.lock.acquire()
                 print('member %s joined' % member.display_name)
                 # Don't blink if we have collision on the member name
                 if self.__addJoinedMember(member.display_name):
                         accentColour = self.__getAccentColour(message.author)
                         self.fresherUno.discordBlink(len(member.display_name))
-                self.lock.release()
 
         # Currently just retrieves the pixel at 4,4
         def __getAccentColour(self, member):
