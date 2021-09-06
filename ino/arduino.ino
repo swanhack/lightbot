@@ -24,7 +24,7 @@ struct strip_state {
 
 // The current state of the strip.
 /// ONLY led_fadeto should change this
-struct strip_state active_state = {0, 0, 0};
+struct strip_state active_state = {0x00, 0xFF, 0x02};
 
 inline void get_iterator_array(const struct strip_state start, const struct strip_state end,
                                uint8_t *iterators) {
