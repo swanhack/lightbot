@@ -7,7 +7,7 @@
 
 ### PROJECT_DIR
 ### This is the path to where you have created/cloned your project
-PROJECT_DIR       = /home/meetowl/program/lightbot/ino/
+PROJECT_DIR       = $(PWD)
 
 ### ARDUINO_DIR
 ### Path to the Arduino application and resources directory.
@@ -19,7 +19,7 @@ ARDMK_DIR         = $(ARDUINO_DIR)/Arduino-Makefile
 
 ### USER_LIB_PATH
 ### Path to where the your project's libraries are stored.
-USER_LIB_PATH    :=  /home/meetowl/Arduino/libraries/
+USER_LIB_PATH    :=  $(HOME)/Arduino/libraries/
 
 ### BOARD_TAG
 ### It must be set to the board you are currently using. (i.e uno, mega2560, etc.)
