@@ -3,7 +3,7 @@ import requests
 import threading
 from PIL import Image
 import discord
-
+import matplotlib.colors as mcolours
 from user_vars import UserVars
 
 class FresherBot(discord.Client):
@@ -36,9 +36,17 @@ class FresherBot(discord.Client):
 
         async def on_message(self, message):
                 if message.author.name == UserVars.DISCORD_USER:
-                        accentColour = self.__getAccentColour(message.author)
-                        if message.content == 'newuser':
+                        msgContentList = message.content.split(' ')
+                        if msgContentList[0] == 'newuser':
+                                accentColour = self.__getAccentColour(message.author)
                                 self.fresherUno.discordBlink(len('newuser'), accentColour)
+                        elif msgContentList[0] == 'colour':
+                                colourPercent = mcolours.to_rgb(msgContentList[1])
+                                colourRGB = (int(colourPercent[0] * 255),
+                                             int(colourPercent[1] * 255),
+                                             int(colourPercent[2] * 255))
+                                self.fresherUno.setDefaultColour(colourRGB)
+                                
     
         async def on_member_join(self, member):
                 print('member %s joined' % member.display_name)
