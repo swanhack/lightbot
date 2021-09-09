@@ -8,6 +8,7 @@
 // Signals we expect to receive through serial
 #define SSIG_DISCORD_JOIN 1
 #define SSIG_SET_DEFAULT_COLOUR 2
+#define SSIG_QUERY_STATE 3
 
 // RGB strip pins
 #define RGB_R 11
@@ -109,8 +110,13 @@ int perform_user_operation() {
                         led_fadeto(&default_colour);
                 }
                 break;
-        }
+        case SSIG_QUERY_STATE:
+                Serial.write(active_state.rval);
+                Serial.write(active_state.gval);
+                Serial.write(active_state.bval);
+                break;
 
+        }
         return 0;
 }
 
@@ -119,6 +125,7 @@ void setup() {
         pinMode(RGB_R, OUTPUT);
         pinMode(RGB_G, OUTPUT);
         pinMode(RGB_B, OUTPUT);
+        led_fadeto(&active_state);
 }
 
 void loop() {
