@@ -1,5 +1,7 @@
 import datetime
 import os
+import serial
+import asyncio
 
 from FresherBot import FresherBot
 from FresherUno import FresherUno
@@ -31,7 +33,7 @@ def main():
         path = "%s/%s" % (DATA_DIR_PATH, str(datetime.date.today()))
         if not os.path.isdir(path):
                 os.makedirs(path)
-
+        
         discordBot = FresherBot(path, fUno)
         discordBot.run(UserVars.DISCORD_API)
 

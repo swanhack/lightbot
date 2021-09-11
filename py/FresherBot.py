@@ -4,6 +4,8 @@ import threading
 from PIL import Image
 import discord
 import matplotlib.colors as mcolours
+import asyncio
+
 from user_vars import UserVars
 
 CUSTOM_COLOUR_DICT = {"swan_hack": (0x00, 0xFF, 0x02),
@@ -40,20 +42,21 @@ class FresherBot(discord.Client):
         async def on_message(self, message):
                 if message.author.name == UserVars.DISCORD_USER:
                         await self.__handlePrivilegedMessage(message)
-        
     
         async def on_member_join(self, member):
                 print('member %s joined' % member.display_name)
                 # Don't blink if we have collision on the member name
                 if self.__addJoinedMember(member.display_name):
                         accentColour = self.__getAccentColour(message.author)
-                        self.fresherUno.discordBlink(len(member.display_name))
+                        self.fresherUno.setTemporaryColour(accentColour)
+                        self.fresherUno.discordBlink(len(member.display_name), accentColour)
 
         async def __handlePrivilegedMessage(self, message):
                 msgContentList = message.content.split(' ')
                 if msgContentList[0] == 'newuser':
                         accentColour = self.__getAccentColour(message.author)
-                        self.fresherUno.discordBlink(len('newuser'), accentColour)
+                        await self.fresherUno.setTemporaryColour(accentColour)
+                        self.fresherUno.discordBlink(len(message.author.name), accentColour)
                 elif msgContentList[0] == 'colour':
                         try:
                                 newDefaultColour = self.__translateColour(msgContentList[1])
@@ -70,7 +73,7 @@ class FresherBot(discord.Client):
                         int(colourPercent[1] * 255),
                         int(colourPercent[2] * 255))
                         
-                        
+        
         # Currently just retrieves the pixel at 4,4
         def __getAccentColour(self, member):
                 req = requests.get(member.avatar_url, stream = True)
