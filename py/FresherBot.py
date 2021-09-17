@@ -40,23 +40,42 @@ class FresherBot(discord.Client):
                 print("%s IS ALIVE" % self.user)
 
         async def on_message(self, message):
+                # fresher-bot message
+                if str(message.channel.id) == UserVars.DISCORD_BOT_MSG_CHANNEL:
+                        await self.__handleChannelMessage(message)
+
                 # Private message from privileged user
-                if str(message.author.id) == UserVars.DISCORD_USER_ID:
+                elif str(message.author.id) == UserVars.DISCORD_USER_ID:
                         await self.__handlePrivilegedMessage(message)
 
-                # fresher-bot message
-                elif message.channel.id == UserVars.DISCORD_BOT_MSG_CHANNEL:
-                        await self.__handleChannelMessage(message)
                         
     
         async def on_member_join(self, member):
-                print('member %s joined' % member.display_name)
-                # Don't blink if we have collision on the member name
-                if self.__addJoinedMember(member.display_name):
-                        accentColour = self.__getAccentColour(message.author)
-                        self.fresherUno.setTemporaryColour(accentColour)
+                # Don't do anything if we have collision on the member name
+                if self.__addJoinedMember(member):
+                        accentColour = self.__getAccentColour(member)
+                        await self.fresherUno.setTemporaryColour(accentColour)
                         self.fresherUno.discordBlink(len(member.display_name), accentColour)
 
+        async def __handleChannelMessage(self, message):
+                messageDelimited = message.content.split(' ')
+                negateNext = False
+                colourList = list()
+                for word in messageDelimited:
+                        if word == "not":
+                                negateNext = not negateNext
+                        elif self.__validColour(word):
+                                colour = self.__translateColour(word)
+                                if negateNext:
+                                        # randomize colour so its not
+                                        # the original
+                                        newColour1 = colour[0] ^ int('11111111', 2)
+                                        newColour2 = colour[1] ^ int('11111111', 2)
+                                        newColour3 = colour[2] ^ int('11111111', 2)
+                                        colour = (newColour1, newColour2, newColour3)
+                                        negateNext = False
+                                await self.fresherUno.setTemporaryColour(colour, totalSec = 5)
+                        
         async def __handlePrivilegedMessage(self, message):
                 msgContentList = message.content.split(' ')
                 if msgContentList[0] == 'newuser':
@@ -69,6 +88,15 @@ class FresherBot(discord.Client):
                                 self.fresherUno.setDefaultColour(newDefaultColour)
                         except ValueError as ve:
                                 await message.author.send("Sorry, I don't know what colour that is.")
+
+        def __validColour(self, colourStr):
+                if colourStr in CUSTOM_COLOUR_DICT.keys():
+                        return True
+                try:
+                        colourPercent = mcolours.to_rgb(colourStr)
+                        return True
+                except ValueError:
+                        return False
 
         def __translateColour(self, colourStr):
                 if colourStr in CUSTOM_COLOUR_DICT.keys():
