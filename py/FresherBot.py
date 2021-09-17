@@ -108,14 +108,14 @@ class FresherBot(discord.Client):
                         int(colourPercent[2] * 255))
                         
         
-        # Currently just retrieves the pixel at 4,4
+        # Currently just retrieves the pixel at arbitrary pixel
         def __getAccentColour(self, member):
                 req = requests.get(member.avatar_url, stream = True)
                 if req.status_code == 200:
                         req.raw.decode_content = True
                         with Image.open(req.raw) as avatarImg:
                                 avatarPx = avatarImg.load()
-                        accentColour = avatarPx[4, 4]
+                        accentColour = avatarPx[50, 50]
                 else:
                         print('error: FresherBot: failed to download image for user %s at %s' %
                               (member.name, imageURL))
