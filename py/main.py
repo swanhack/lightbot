@@ -20,8 +20,11 @@ def main():
         if not UserVars.DISCORD_API:
                 print("error: py/user_vars.py: DISCORD_API not filled in, please visit the file")
                 exit()
-        if not UserVars.DISCORD_USER:
+        if not UserVars.DISCORD_USER_ID:
                 print("error: py/user_vars.py: DISCORD_USER not filled in, please visit the file")
+                exit()
+        if not UserVars.DISCORD_BOT_MSG_CHANNEL:
+                print("error: py/user_vars.py: DISCORD_BOT_MSG_CHANNEL not filled in, please visit the file")
                 exit()
 
         try:

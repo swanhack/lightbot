@@ -40,8 +40,14 @@ class FresherBot(discord.Client):
                 print("%s IS ALIVE" % self.user)
 
         async def on_message(self, message):
-                if message.author.name == UserVars.DISCORD_USER:
+                # Private message from privileged user
+                if str(message.author.id) == UserVars.DISCORD_USER_ID:
                         await self.__handlePrivilegedMessage(message)
+
+                # fresher-bot message
+                elif message.channel.id == UserVars.DISCORD_BOT_MSG_CHANNEL:
+                        await self.__handleChannelMessage(message)
+                        
     
         async def on_member_join(self, member):
                 print('member %s joined' % member.display_name)
