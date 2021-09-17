@@ -7,7 +7,7 @@
 class UserVars():
     # Fill this with your Discord bot's API key
     DISCORD_API = ''
-    # Fill this with your name for "privileged mode"
-    DISCORD_USER = ''
+    # Fill this with {name}#{discriminator} (e.g. bigman#1234)
+    DISCORD_USER_ID = ''
     # ID of channel the bot should respond to
     DISCORD_BOT_MSG_CHANNEL = ''
