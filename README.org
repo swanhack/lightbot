@@ -1,7 +1,8 @@
 * Functions
   - When a new user joins a server where the bot also resides:
-    - Pulse between Discord purple and new user's profile picture colour at pixel 4,4
+    - Pulse between Discord purple and new user's profile picture colour at a specific pixel
     - Record the new user in data/<DATE>/joinedMembers.txt
+    - Receive commands and talk to a users in a channel. 
 * Installation
   1. Clone this repository
   2. Open py/user_vars.py and set both the required variables
@@ -11,8 +12,13 @@
 * To-do
 ** TODO Write full installation guide
    - Current guide only includes basic software installation and running, arduino install guide not included.
-** TODO When newuser pulse stops, set the background colour to user's colour
+** DONE When newuser pulse stops, set the background colour to user's colour
    - Otherwise it just stays to whatever colour I set it to
-** TODO Allow priv. user to override colour
+** DONE Allow priv. user to override colour
    - In case someone doesn't have a nice colour at pixel 4,4 
+** TODO Make the bot be a bit more conversational in the discord channel
+   - "You didn't say the magic word"
+   - "I don't feel like it"
+** TODO Give people a timeout on bot commands to avoid abuse
+   - "I gotta time you out buddy"
 
