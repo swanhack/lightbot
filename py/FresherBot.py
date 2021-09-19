@@ -40,7 +40,7 @@ class FresherBot(discord.Client):
                 # Last time we changed the sassMode
                 self.__sassLastChanged = 0
                 # How frequently we change moods
-                self.__SASS_CHANGE_FREQUENCY_SECONDS = 5
+                self.__SASS_CHANGE_FREQUENCY_SECONDS = 10
 
                 # run the constructor of our parent (discord.Client) with right permissions
                 memberIntent = discord.Intents.default()
@@ -116,7 +116,7 @@ class FresherBot(discord.Client):
                 if sass > 0.75:
                         self.__responseFunction = self.__assholeResponse
                 elif sass > 0.50:
-                        self.__responseFunction = self.__lumpySpacePrincessResponse
+                        self.__responseFunction = self.__politenessRequiredResponse
                 elif sass > 0.25:
                         self.__responseFunction = self.__semiSassResponse
                 else:
@@ -191,8 +191,46 @@ class FresherBot(discord.Client):
                                                                          totalSec = 5)
                                 
 
-        async def __lumpySpacePrincessResponse(self, message, colourQueue, polite):
-                print("WHATEVERS")
+        async def __politenessRequiredResponse(self, message, colourQueue, polite):
+                politeColourResponses = ("Ah shucks, of course I'll set the colour to %s, you're welcome sonny.",
+                                         "Sure thing friendolino! I appreciate the politeness! Take a look at %s!",
+                                         "Geez you're so nice, how can I resist? Here you go! %s!")
+                rudeResponse = ("Ah-ah-ah, you didn't say the magic word!",
+                                "Yeah I'm sorry I cannot handle your rudeness rn, consider " +
+                                "being a bit more polite next time.",
+                                "Can I get a \"please\" in the chat?")
+                politeNegatedResponses = ("I'd tend to disagree on the matter of whether %s is " +
+                                          "unfavourable, however unfortunately due to your politeness" +
+                                          " I simply do not have the heart to refuse such a request, " +
+                                          " as it seems you are a natural-born charmer and very nice :)",
+                                          "Of course! I hope my replacement for %s will be satisfactory.",
+                                          "You're welcome! Here you go fellow human being who dislikes %s.")
+                colourlessResponses = ("That's good and all, but I am apologetic to admit that I simply " +
+                                       "cannot parse your request",
+                                       "Hmm, interesting, tell me more.",
+                                       "I am definitely capable interpreting everything you are saying and capable " +
+                                       "of understanding it, I just don't want to.")
+                
+                response = "something went wrong with my programming and I am left sad :(\nYou are free to blame anyone on committee for this henious crime."
+                choice = int(random.random() * 3)
+                if colourQueue:
+                        colour = colourQueue.pop()
+                        if not polite:
+                                await message.reply(rudeResponse[choice])        
+                        elif colour["negated"]:
+                                response = politeNegatedResponses[choice] % colour["word"]
+                                await message.reply(response)
+                                await self.fresherUno.setTemporaryColour(FresherBot.colourNOT(colour["colour"]),
+                                                                         totalSec = 5)
+                        else:
+                                response = politeColourResponses[choice] % colour["word"]
+                                await self.fresherUno.setTemporaryColour(colour["colour"],
+                                                                         totalSec = 5)
+
+
+                else:
+                        response = colourlessResponses[choice]
+                        await message.reply(response)
                 
         async def __assholeResponse(self, message, colourQueue, polite):
                 colourResponses = ("Really? %s? I'm not setting that.",
