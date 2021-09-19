@@ -145,13 +145,51 @@ class FresherBot(discord.Client):
                                 response = negatedResponses[int(random.random() * 3)] % colour["word"]
                         else:
                                 response = colourResponses[int(random.random() * 3)] % colour["word"]
+                        await self.fresherUno.setTemporaryColour(colour["colour"], totalSec = 5)
                 else:
                         response = colourlessResponses[int(random.random() * 3)]
                 await message.reply(response)
-                await self.fresherUno.setTemporaryColour(colour, totalSec = 5)
+                
 
         async def __semiSassResponse(self, message, colourQueue, polite):
-                print("ugh I guess")
+                colourResponses = ("%s? If you say so.",
+                                   "I don't think %s is the best choice, but I guess I have no say in the matter.",
+                                   "Fine, i'll give you %s, but you might like the second one a bit more.")
+                negatedResponses = ("I'll tend to agree with you that %s is pretty bad.",
+                                    "Yeah, I could see why you say that, %s really is a colour that only " +
+                                    "a mother could love.",
+                                    "I HATE %s")
+                colourlessResponses = ("I know you'd like to think I'm dumb but I like to think you just " +
+                                       "don't know how to speak to me.",
+                                       "I understand, but at the same time I don't.",
+                                       "I don't understand, so have blurple instead.")
+                
+                response = "something went wrong with my programming and I am left sad :(\nYou are free to blame anyone on committee for this henious crime."
+                choice = int(random.random() * 3)
+                if colourQueue:
+                        colour = colourQueue.pop()
+                        if colour["negated"]:
+                                response = negatedResponses[choice] % colour["word"]
+                                await message.reply(response)
+                                await self.fresherUno.setTemporaryColour(colour["colour"],
+                                                                         totalSec = 5)
+                        else:
+                                response = colourResponses[choice] % colour["word"]
+                                await message.reply(response)
+                                await self.fresherUno.setTemporaryColour(colour["colour"],
+                                                                         totalSec = 5)
+                                if choice == 2:
+                                        colourNOTed = FresherBot.colourNOT(colour["colour"])
+                                        time.sleep(5)
+                                        await self.fresherUno.setTemporaryColour(colourNOTed,
+                                                                                 totalSec = 5)
+                else:
+                        response = colourlessResponses[int(random.random() * 3)]
+                        await message.reply(response)
+                        if choice == 2:
+                                await self.fresherUno.setTemporaryColour(self.__translateColour("#5539cc"),
+                                                                         totalSec = 5)
+                                
 
         async def __lumpySpacePrincessResponse(self, message, colourQueue, polite):
                 print("WHATEVERS")
