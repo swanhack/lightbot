@@ -33,14 +33,14 @@ class FresherBot(discord.Client):
                 self.messagedMemberSet = set()
 
                 # Set the random seed to system time
-                random.seed()
+                random.seed(int(time.time() * 1000))
 
                 # Function to respond to requests (based on mood)
                 self.__responseFunction = self.__simpResponse
                 # Last time we changed the sassMode
                 self.__sassLastChanged = 0
                 # How frequently we change moods
-                self.__SASS_CHANGE_FREQUENCY_SECONDS = 10
+                self.__SASS_CHANGE_FREQUENCY_SECONDS = 5
 
                 # run the constructor of our parent (discord.Client) with right permissions
                 memberIntent = discord.Intents.default()
@@ -80,9 +80,21 @@ class FresherBot(discord.Client):
         
         async def __handleChannelMessage(self, message):
                 messageDelimited = message.content.split(' ')
+                helpString = \
+                ("I am the one who controls the lights you see at the swan_hack " + \
+                "Freshers' Fayre stall!\nI am capable of rudimentary " + \
+                "communication and my mood changes every %d seconds!\n" + \
+                "You can find out exactly how I work here: " + \
+                "https://github.com/swanhack/lightbot/blob/main/py/FresherBot.py\n\n" + \
+                "Now, ask me to display a *colour*!") % self.__SASS_CHANGE_FREQUENCY_SECONDS
+                
                 negateNext = False
                 polite = False
                 colourQueue = list()
+                if message.content == "who are you?":
+                        await message.reply(helpString)
+                        return
+                
                 for word in messageDelimited:
                         if word == "not":
                                 negateNext = True
