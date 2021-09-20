@@ -171,7 +171,7 @@ class FresherBot(discord.Client):
                                     "Yeah, I could see why you say that, %s really is a colour that only " +
                                     "a mother could love.",
                                     "I HATE %s")
-                colourlessResponses = ("I know you'd like to think I'm dumb but I like to think you just " +
+                colourlessResponses = ("I know you'd like to think I'm dumb, but I like to think you just " +
                                        "don't know how to speak to me.",
                                        "I understand, but at the same time I don't.",
                                        "I don't understand, so have blurple instead.")
