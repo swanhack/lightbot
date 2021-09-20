@@ -267,7 +267,7 @@ class FresherBot(discord.Client):
                                 response = negatedResponses[choice] % colour["word"]
                                 await message.reply(response)
                                 if choice == 2:
-                                        notNegated = FresherBot.colourNOT(colour[colour])
+                                        notNegated = FresherBot.colourNOT(colour["colour"])
                                         await message.reply("Too bad, you're getting it.")
                                         
                                         await self.fresherUno.setTemporaryColour(notNegated,
