@@ -57,13 +57,12 @@ class FresherBot(discord.Client):
                 print("%s IS ALIVE" % self.user)
 
         async def on_message(self, message):
-                # fresher-bot message
-                if str(message.channel.id) == UserVars.DISCORD_BOT_MSG_CHANNEL and not message.author.bot:
-                        await self.__handleChannelMessage(message)
-
                 # Private message from privileged user
-                elif str(message.author.id) == UserVars.DISCORD_USER_ID:
+                if str(message.author.id) == UserVars.DISCORD_USER_ID:
                         await self.__handlePrivilegedMessage(message)
+                elif not message.author.bot:
+                        # Colour request message
+                        await self.__handleChannelMessage(message)
 
                         
     
@@ -81,7 +80,7 @@ class FresherBot(discord.Client):
                 return (newColour0, newColour1, newColour2)
         
         async def __handleChannelMessage(self, message):
-                messageDelimited = message.content.split(' ')
+                messageDelimited = message.content.lower().split(' ')
                 helpString = \
                 ("I am the one who controls the lights you see at the swan_hack " + \
                 "Freshers' Fayre stall!\nI am capable of rudimentary " + \
@@ -93,7 +92,7 @@ class FresherBot(discord.Client):
                 negateNext = False
                 polite = False
                 colourQueue = list()
-                if message.content == "who are you?":
+                if message.content == "who are you?" or message.content == "who are you":
                         await message.reply(helpString)
                         return
                 
@@ -286,12 +285,15 @@ class FresherBot(discord.Client):
 
                 else:
                         response = colourlessResponses[int(random.random() * 3)]
-                        await message.reply(response)
+                        try:
+                                await message.reply(response)
+                        except discord.errors.Forbidden:
+                                print("inhibited exception")
 
                 
                 
         async def __handlePrivilegedMessage(self, message):
-                msgContentList = message.content.split(' ')
+                msgContentList = message.content.lower().split(' ')
                 if msgContentList[0] == 'newuser':
                         accentColour = self.__getAccentColour(message.author)
                         await self.fresherUno.setTemporaryColour(accentColour)
@@ -319,6 +321,9 @@ class FresherBot(discord.Client):
                         self.__responseFunction = self.__assholeResponse
                         self.__sassLastChanged = int(time.time())
                         await message.reply("👍")
+                else:
+                        await self.__handleChannelMessage(message)
+                
 
         def __validColour(self, colourStr):
                 if colourStr in CUSTOM_COLOUR_DICT.keys():
