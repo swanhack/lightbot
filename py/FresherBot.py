@@ -13,6 +13,7 @@ from user_vars import UserVars
 CUSTOM_COLOUR_DICT = {"swan_hack": (0x00, 0xFF, 0x02),
                       "pink"     : (0xFF, 0x22, 0xCB)}
 
+
 class FresherBot(discord.Client):
         def __init__(self, dataPath, fresherUno):
                 self.fresherUno = fresherUno
@@ -40,7 +41,7 @@ class FresherBot(discord.Client):
                 # Last time we changed the sassMode
                 self.__sassLastChanged = 0
                 # How frequently we change moods
-                self.__SASS_CHANGE_FREQUENCY_SECONDS = 5
+                self.__SASS_CHANGE_FREQUENCY_SECONDS = 60
 
                 # run the constructor of our parent (discord.Client) with right permissions
                 memberIntent = discord.Intents.default()
@@ -300,6 +301,18 @@ class FresherBot(discord.Client):
                                 self.fresherUno.setDefaultColour(newDefaultColour)
                         except ValueError as ve:
                                 await message.author.send("Sorry, I don't know what colour that is.")
+                elif msgContentList[0] == 'simp':
+                        self.__responseFunction = self.__simpResponse
+                        self.__sassLastChanged = int(time.time())
+                elif msgContentList[0] == 'semi':
+                        self.__responseFunction = self.__semiSassResponse
+                        self.__sassLastChanged = int(time.time())
+                elif msgContentList[0] == 'polite':
+                        self.__responseFunction = self.__politenessRequiredResponse
+                        self.__sassLastChanged = int(time.time())
+                elif msgContentList[0] == 'ass':
+                        self.__responseFunction = self.__assholeResponse
+                        self.__sassLastChanged = int(time.time())
 
         def __validColour(self, colourStr):
                 if colourStr in CUSTOM_COLOUR_DICT.keys():
