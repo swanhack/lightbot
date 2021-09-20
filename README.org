@@ -4,14 +4,17 @@
     - Record the new user in data/<DATE>/joinedMembers.txt
     - Receive commands and talk to a users in a channel. 
 * Installation
-  1. Clone this repository
-  2. Open py/user_vars.py and set both the required variables
-  3. Execute =make run= in root directory
+  1. Install pyserial and discord python libraries:
+     =pip install pyserial discord=
+  2. Clone this repository with =git clone=
+  3. Open py/user_vars.py and set all the required variables
+  4. Run the bot with:
+     =make run=
 * Troubleshooting
   - Step 1. Good luck
 * To-do
-** TODO Write full installation guide
-   - Current guide only includes basic software installation and running, arduino install guide not included.
+** TODO Write Arduino installation guide
+   - Wiring, parts, etc.
 ** TODO Give people a timeout on bot commands to avoid abuse
    - "I gotta time you out buddy"
 
