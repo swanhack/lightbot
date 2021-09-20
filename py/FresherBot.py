@@ -305,15 +305,20 @@ class FresherBot(discord.Client):
                 elif msgContentList[0] == 'simp':
                         self.__responseFunction = self.__simpResponse
                         self.__sassLastChanged = int(time.time())
+                        await message.reply("👍")
                 elif msgContentList[0] == 'semi':
                         self.__responseFunction = self.__semiSassResponse
                         self.__sassLastChanged = int(time.time())
+                        await message.reply("👍")
                 elif msgContentList[0] == 'polite':
                         self.__responseFunction = self.__politenessRequiredResponse
                         self.__sassLastChanged = int(time.time())
+                        await message.reply("👍")
+
                 elif msgContentList[0] == 'ass':
                         self.__responseFunction = self.__assholeResponse
                         self.__sassLastChanged = int(time.time())
+                        await message.reply("👍")
 
         def __validColour(self, colourStr):
                 if colourStr in CUSTOM_COLOUR_DICT.keys():
