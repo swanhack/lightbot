@@ -11,7 +11,8 @@ import time
 from user_vars import UserVars
 
 CUSTOM_COLOUR_DICT = {"swan_hack": (0x00, 0xFF, 0x02),
-                      "pink"     : (0xFF, 0x22, 0xCB)}
+                      "pink"     : (0xFF, 0x22, 0xCB),
+                      "blurple"  : (0x55, 0x39, 0xcc)}
 
 
 class FresherBot(discord.Client):
@@ -200,7 +201,7 @@ class FresherBot(discord.Client):
                         response = colourlessResponses[int(random.random() * 3)]
                         await message.reply(response)
                         if choice == 2:
-                                await self.fresherUno.setTemporaryColour(self.__translateColour("#5539cc"),
+                                await self.fresherUno.setTemporaryColour(CUSTOM_COLOUR_DICT["blurple"],
                                                                          totalSec = 5)
                                 
 
