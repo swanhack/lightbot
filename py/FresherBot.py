@@ -146,7 +146,7 @@ class FresherBot(discord.Client):
                                    " haha but what if I was like there right now instead of changing" +
                                    " lights for you...haha jk!!!!! unless... 👉👈")
                 negatedResponses = ("i'll erase all the %s in the world for you, m'lady",
-                                    "woah thats crazy I hate %s just like you hehe woah",
+                                    "woah thats crazy I hate %s as well, we have so much in common hehe woah",
                                     "%s? yeah, screw that colour, it sucks.")
                 colourlessResponses = ("i'm sorry I didn't get that, I swear i'll try harder next time uwu",
                                        "i have no idea what you are saying but I love the way you talk",
